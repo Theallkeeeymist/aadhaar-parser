@@ -1,0 +1,12 @@
+path: augmented
+train: images
+val: images
+names:
+  0: aadhaar
+
+
+#YOLO Dataset config
+#YOLO is you only look once. A real time object detection algorithm in CV
+#It divides the image into grids and predicts bounding boxes around objects
+#identifies what those objects are and output the detection
+#ULTRALYTICS developed YOLO
