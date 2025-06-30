@@ -7,8 +7,8 @@ import os
 
 model=YOLO(r'C:\Users\sudha\PycharmProjects\document_parser\scripts\trained_model\best.pt')
 confidence_threshold=0.5
-image=r"C:\Users\sudha\PycharmProjects\document_parser\dataset\test\testimg4.png"
-output=r"C:\Users\sudha\PycharmProjects\document_parser\results\testimg4\predimg.jpg"
+image=r"C:\Users\sudha\PycharmProjects\document_parser\dataset\test\testimg2.png"
+output=r"C:\Users\sudha\PycharmProjects\document_parser\results\testimg1\predimg.jpg"
 
 image=cv2.imread(image)
 resized_image=cv2.resize(image,(640,640))
@@ -31,7 +31,7 @@ def classify_text(text):
     for field,keys in keywords.items():
         if any(key.lower() in text.lower() for key in keys):
             return field.upper().replace(" ", "_")
-        return "UNKNOWN"
+    return "UNKNOWN"
 def clean_text(text, is_date=False):
     if is_date:
         date_match=re.search(r'\b\d{2}[/\-]\d{2}[/\-]\d{4}', text)
@@ -54,7 +54,7 @@ for result in results:
         gray=cv2.cvtColor(cropped, cv2.COLOR_BGR2GRAY)
         _,thresh=cv2.threshold(gray,150,255, cv2.THRESH_BINARY)
 
-        config="--psm 11 --oem 1" if result.names[int(labels[i])]=="DATE_OF_BIRTH" else "--psm 6"
+        config="--psm 7 --oem 1" if result.names[int(labels[i])]=="DATE_OF_BIRTH" else "--psm 6"
         text=pytesseract.image_to_string(thresh, config=config).strip()
 
         label=result.names[int(labels[i])]
@@ -72,7 +72,7 @@ for result in results:
 
         cv2.rectangle(image_with_boxes, (x1,y1), (x2,y2),(0,255,0),2)
         cv2.putText(image_with_boxes, f"{label}: {text}", (x1,y1-10), cv2.FONT_HERSHEY_SIMPLEX,0.5,(0,255,0),0)
-    output2 = r"C:\Users\sudha\PycharmProjects\document_parser\results\testimg4\w_detail.jpg"
+    output2 = r"C:\Users\sudha\PycharmProjects\document_parser\results\testimg1\w_detail.jpg"
     cv2.imwrite(output2, image_with_boxes)
     plt.figure(figsize=(10,10))
     plt.imshow(cv2.cvtColor(image_with_boxes, cv2.COLOR_BGR2RGB))
