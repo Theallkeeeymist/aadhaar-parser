@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Aadhaar Parser</title>
+</head>
+<body>
+    <h2> Upload Aadhaar Card </h2>
+    <input type="file" id="imageInput"><br><br>
+    <button onclick="uploadImage()">Upload</button>
+    <pre id="result"></pre>
+
+    <script>
+        function uploadImage(){
+            const input=document.getElementById('imageInput');
+            const file=input.files[0]
+            const formData=new FormData();
+            formData.append('image', file);
+
+            fetch('http://127.0.0.1:8000/api/upload/', {
+                method: 'POST',
+                body: formData
+            })
+        .then(res=>res.json())
+        .then(data=> {
+                document.getElementById('result').textContent=JSON.stringify(data, null, 2);
+        })
+        .catch(err => {
+                document.getElementById('result').textContent='Error: '+ err;
+        });
+    }
+    </script>
+</body>
+</html>
