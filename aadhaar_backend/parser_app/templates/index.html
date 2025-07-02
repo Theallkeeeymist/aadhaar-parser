@@ -56,22 +56,21 @@
             padding: 20px;
             background-color: #f8f9fa;
             border-radius: 5px;
-            display: none; /* Hidden by default */
+            display: none;
         }
 
         .error {
             color: red;
             margin-top: 10px;
-            display: none; /* Hidden by default */
+            display: none;
         }
 
         .loading {
-            display: none; /* Hidden by default */
+            display: none;
             text-align: center;
             margin-top: 20px;
         }
 
-        /* Simple data display */
         .data-item {
             margin: 10px 0;
             padding: 10px;
@@ -151,7 +150,61 @@
             document.getElementById('loadingMessage').style.display='none';
         }
         function showResults(data){
-            var resultDiv=document.getElementById('resultData');
+            const resultDiv=document.getElementById('resultData');
+            resultDiv.innerHTML=`
+                <form id="aadhaarForm" onsubmit="event.preventDefault(); submitForm();">
+                    <div class="data-item">
+                        <label class="data-label">Name: </label>
+                        <input type="text" class="data-value" id="name" name="name" value="${data.NAME || ''}">
+                    </div>
+                    <div class="data-item">
+                        <label class="data-label">Gender: </label>
+                        <input type="text" class="data-value" id="gender" name="gender" value="${data.GENDER || ''}">
+                    </div>
+                    <div class="data-item">
+                        <label class="data-label">Date of Birth: </label>
+                        <input type="text" class="data-value" id="dob" name="dob" value="${data.DATE_OF_BIRTH || ''}">
+                    </div>
+                    <div class="data-item">
+                        <label class="data-label">Aadhaar Number: </label>
+                        <input type="text" class="data-value" id="aadhaar_number" name="aadhaar_number" value="${data.AADHAAR_NUMBER || ''}">
+                    </div>
+                    <div style="text-align:center; margin-top:20px;">
+                        <button type="submit">Submit to Database</button>
+                    </div>
+                </form>
+             `;
+            document.getElementById('resultSection').style.display='block';
+        }
+
+        function submitForm(){
+            const data={
+                name: document.getElementById('name').value,
+                gender: document.getElementById('gender').value,
+                date_of_birth: document.getElementById('dob').value,
+                aadhaar: document.getElementById('aadhaar_number').value,
+            };
+            fetch('http://127.0.0.1:8000/api/save/', {
+                method:'POST',
+                headers:{
+                    'content-Type':'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result=>{
+                alert('✅ Saved to database: ' + result.message);
+            })
+            .catch(error=>{
+                alert('❌ Error saving: ' + error.message);
+            });
+        }
+    </script>
+</body>
+</html>
+
+
+<!--var resultDiv=document.getElementById('resultData');
             resultDiv.innerHTML=' ';
 
             var fields=[
@@ -170,9 +223,4 @@
                              '</div>';
                     resultDiv.innerHTML+=html;
                 }
-            }
-            document.getElementById('resultSection').style.display='block';
-        }
-    </script>
-</body>
-</html>
+            }-->

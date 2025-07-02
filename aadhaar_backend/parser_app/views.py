@@ -32,19 +32,16 @@ def parse_view(request):
     else:
         return JsonResponse({"error" : "No image uploaded"})
 
-
-
-
-
-# def save_aadhaar_data(request):
-#     if request.method=="POST":
-#         data=json.loads(request.body)
-#         AadhaarData.objects.create(
-#             NAME=data.get("name"),
-#             AADHAAR_NUMBER=data.get("number"),
-#             DATE_OF_BIRTH=data.get("date_of_birth"),
-#             GENDER=data.get("gender")
-#         )
-#         return JsonResponse({"message": "Data Saved!"})
-#     else:
-#         return JsonResponse({"oops": "Invalid request"}, status=400)
+@csrf_exempt
+def save_aadhaar_data(request):
+    if request.method=="POST":
+        data=json.loads(request.body)
+        AadhaarData.objects.create(
+            NAME=data.get("name"),
+            AADHAAR_NUMBER=data.get("aadhaar"),
+            DATE_OF_BIRTH=data.get("date_of_birth"),
+            GENDER=data.get("gender")
+        )
+        return JsonResponse({"message": "Data Saved!"})
+    else:
+        return JsonResponse({"oops": "Invalid request"}, status=400)
