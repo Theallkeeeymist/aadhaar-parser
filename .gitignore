@@ -2,6 +2,7 @@
 dataset/
 results/
 scripts/augmented
+aadhaar_backend/media/
 
 #ignore dataset
 aclImdb/

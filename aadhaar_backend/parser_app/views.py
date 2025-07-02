@@ -11,8 +11,8 @@ import json
 # Create your views here.
 @csrf_exempt
 def upload_and_parse_image(request):
-    if request.method=='POST' and request.FILES.get('aadhaar_image'):
-        image_file=request.FILES['aadhaar_image']
+    if request.method=='POST' and request.FILES.get('image'):
+        image_file=request.FILES['image']
 
         save_path=default_storage.save(f'temp/{image_file.name}', image_file)
         image_path=os.path.join(settings.MEDIA_ROOT, save_path)
@@ -22,6 +22,15 @@ def upload_and_parse_image(request):
         return JsonResponse(extracted_info)
 
     return JsonResponse({'error': 'No image uploaded'}, status=400)
+
+def home(request):
+    return render(request, 'index.html')
+
+def parse_view(request):
+    if request.method=="POST" and request.FILES.get('image'):
+        image_file=request.FILES['image']
+    else:
+        return JsonResponse({"error" : "No image uploaded"})
 
 
 

@@ -5,7 +5,7 @@ import re
 import matplotlib.pyplot as plt
 import os
 
-model=YOLO(r'C:\Users\sudha\PycharmProjects\document_parser\scripts\trained_model\best.pt')
+model=YOLO(r'C:\Users\sudha\PycharmProjects\document_parser\scripts\trained_model\aadhaar_detection_YOLOv8_model.pt')
 confidence_threshold=0.5
 image=r"C:\Users\sudha\PycharmProjects\document_parser\dataset\test\testimg2.png"
 output=r"C:\Users\sudha\PycharmProjects\document_parser\results\testimg1\predimg.jpg"

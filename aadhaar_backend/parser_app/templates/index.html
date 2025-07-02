@@ -3,32 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <title>Aadhaar Parser</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .upload-section {
+            border: 2px dashed #ccc;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        input[type="file"] {
+            margin: 20px 0;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            display: none; /* Hidden by default */
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+            display: none; /* Hidden by default */
+        }
+
+        .loading {
+            display: none; /* Hidden by default */
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Simple data display */
+        .data-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-left: 4px solid #007bff;
+        }
+
+        .data-label {
+            font-weight: bold;
+            color: #666;
+        }
+
+        .data-value {
+            margin-top: 5px;
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
-    <h2> Upload Aadhaar Card </h2>
-    <input type="file" id="imageInput"><br><br>
-    <button onclick="uploadImage()">Upload</button>
-    <pre id="result"></pre>
+    <h1>Aadhaar Card Parser</h1>
+    <div class="upload-section">
+        <h3>Upload Your Aadhaar Card</h3>
+        <p>Select an image file</p>
+
+        <input type="file" id="fileInput"> <br>
+        <button onclick="uploadFile()">Upload</button>
+
+        <div class="error" id="errorMessage"></div>
+        <div class="loading" id="loadingMessage">Processing... This may take a few seconds.</div>
+    </div>
+
+    <div class="result" id="resultSection">
+        <h3>Parsed Information: </h3>
+        <div id="resultData"></div>
+    </div>
 
     <script>
-        function uploadImage(){
-            const input=document.getElementById('imageInput');
-            const file=input.files[0]
-            const formData=new FormData();
+        function uploadFile(){
+            var fileInput=document.getElementById('fileInput');
+
+            if(!fileInput.files[0]){
+                showError('Please select a file first!');
+                return;
+            }
+            var file=fileInput.files[0];
+            showLoading();
+
+            var formData = new FormData();
             formData.append('image', file);
 
             fetch('http://127.0.0.1:8000/api/upload/', {
-                method: 'POST',
-                body: formData
+                    method:'POST',
+                    body: formData
             })
-        .then(res=>res.json())
-        .then(data=> {
-                document.getElementById('result').textContent=JSON.stringify(data, null, 2);
-        })
-        .catch(err => {
-                document.getElementById('result').textContent='Error: '+ err;
-        });
-    }
+            .then(function(response){
+                return response.json();
+            })
+            .then(function(data){
+                hideLoading();
+                showResults(data);
+            })
+            .catch(function(error){
+                hideLoading();
+                showError('Error: '+error.message);
+            })
+        }
+        function showError(message){
+            document.getElementById('errorMessage').textContent=message;
+            document.getElementById('errorMessage').style.display='block';
+        }
+        function showLoading(){
+            document.getElementById('loadingMessage').style.display='block';
+            document.getElementById('errorMessage').style.display='none';
+            document.getElementById('resultSection').style.display='none';
+        }
+        function hideLoading(){
+            document.getElementById('loadingMessage').style.display='none';
+        }
+        function showResults(data){
+            var resultDiv=document.getElementById('resultData');
+            resultDiv.innerHTML=' ';
+
+            var fields=[
+                {key:'NAME', label: 'Name'},
+                {key:'AADHAAR_NUMBER', label: 'Aadhaar Number'},
+                {key:'DATE_OF_BIRTH', label: 'Date of Birth'},
+                {key:'GENDER', label: 'Gender'}
+            ];
+
+            for(var i=0; i<fields.length; i++){
+                var field=fields[i];
+                if (data[field.key]){
+                    var html='<div class="data-item">'+
+                             '<div class="data-label">'+ field.label + ':</div>' +
+                             '<div class="daa-value">'+ data[field.key] + '</div>' +
+                             '</div>';
+                    resultDiv.innerHTML+=html;
+                }
+            }
+            document.getElementById('resultSection').style.display='block';
+        }
     </script>
 </body>
 </html>
