@@ -12,8 +12,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
 
-from django.conf.global_settings import MEDIA_URL
+from django.conf.global_settings import MEDIA_URL, DATABASES
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -79,18 +80,21 @@ WSGI_APPLICATION = 'aadhaar_backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'aadhaar_db',
-        'USER': 'root',
-        'PASSWORD': 'Sudhanshu@45',
-        'HOST': 'localhost',
-        'PORT': '3306'
+if os.environ.get('DATABASE_URL'):
+    DATABASES={
+        'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
     }
-}
-
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'aadhaar_db',
+            'USER': 'root',
+            'PASSWORD': 'Sudhanshu@45',
+            'HOST': 'localhost',
+            'PORT': '3306'
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -127,9 +131,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT=os.path.join(BASE_DIR, 'staticfiles')
 
 MEDIA_URL='/media/'
-
 MEDIA_ROOT=os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
@@ -145,3 +149,5 @@ REST_FRAMEWORK={
         'rest_framework.permissions.IsAuthenticated',
     ]
 }
+
+PORT=int(os.environ.get('PORT', 8000))
