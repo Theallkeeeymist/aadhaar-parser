@@ -35,13 +35,22 @@ def parse_view(request):
 @csrf_exempt
 def save_aadhaar_data(request):
     if request.method=="POST":
-        data=json.loads(request.body)
-        AadhaarData.objects.create(
-            NAME=data.get("name"),
-            AADHAAR_NUMBER=data.get("aadhaar"),
-            DATE_OF_BIRTH=data.get("date_of_birth"),
-            GENDER=data.get("gender")
-        )
-        return JsonResponse({"message": "Data Saved!"})
-    else:
-        return JsonResponse({"oops": "Invalid request"}, status=400)
+        try:
+            data=json.loads(request.body.decode('utf-8'))
+
+            name = data.get("name")
+            aadhaar = data.get("aadhaar")
+            dob = data.get("date_of_birth")
+            gender = data.get("gender")
+
+            AadhaarData.objects.create(
+                name=name,
+                aadhaar_number=aadhaar,
+                date_of_birth=dob,
+                gender=gender
+            )
+            return JsonResponse({"message": "Data Saved!"})
+        except Exception as e:
+            return JsonResponse({"error" : str(e)}, status=400)
+
+    return JsonResponse({"oops": "Invalid request"}, status=400)
