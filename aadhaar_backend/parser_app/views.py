@@ -2,13 +2,26 @@ from django.core.files.storage import default_storage
 from django.conf import settings
 from django.shortcuts import render
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from rest_framework import status
+from rest_framework.decorators import api_view,permission_classes
+from rest_framework.permissions import IsAuthenticated
+# from rest_framework.authentication import TokenAuthentication
+from rest_framework.response import Response
 import os
 from .utils import parse_from_image
 from .models import AadhaarData
+from rest_framework.authtoken.models import Token
+from django.contrib.auth.models import User
+from rest_framework.authtoken.views import obtain_auth_token
+from django.views.decorators.csrf import csrf_exempt
 import json
 
 # Create your views here.
+# user=User.objects.get(username='sudhanshuanand')
+# token, created=Token.objects.get_or_create(user=user)
+# print(token.key)
+
+# @api_view(['POST'])
 @csrf_exempt
 def upload_and_parse_image(request):
     if request.method=='POST' and request.FILES.get('image'):
@@ -32,16 +45,21 @@ def parse_view(request):
     else:
         return JsonResponse({"error" : "No image uploaded"})
 
-@csrf_exempt
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])
 def save_aadhaar_data(request):
     if request.method=="POST":
         try:
             data=json.loads(request.body.decode('utf-8'))
+            # data=request.data
 
             name = data.get("name")
             aadhaar = data.get("aadhaar")
             dob = data.get("date_of_birth")
             gender = data.get("gender")
+
+            if AadhaarData.objects.filter(aadhaar_number=aadhaar).exists():
+                return JsonResponse({"error": "Aadhaar Number already exists."}, status=400)
 
             AadhaarData.objects.create(
                 name=name,

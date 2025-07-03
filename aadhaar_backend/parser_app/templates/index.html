@@ -91,6 +91,11 @@
 </head>
 <body>
     <h1>Aadhaar Card Parser</h1>
+<!--    <div class="login">-->
+<!--        <input type="text" id="username" placeholder="Username">-->
+<!--        <input type="password", id="password" placeholder="Password">-->
+<!--        <button onclick="loginUser()">Login</button>-->
+<!--    </div>-->
     <div class="upload-section">
         <h3>Upload Your Aadhaar Card</h3>
         <p>Select an image file</p>
@@ -187,13 +192,17 @@
             fetch('http://127.0.0.1:8000/api/save/', {
                 method:'POST',
                 headers:{
-                    'content-Type':'application/json',
+                    'Content-Type':'application/json',
                 },
                 body: JSON.stringify(data)
             })
             .then(response => response.json())
             .then(result=>{
-                alert('✅ Saved to database: ' + result.message);
+                if(result.error){
+                    alert('❌ Errot: ' + result.error);
+                }else{
+                    alert('✅ Saved to database: ' + result.message);
+                }
             })
             .catch(error=>{
                 alert('❌ Error saving: ' + error.message);
