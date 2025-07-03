@@ -1,8 +1,6 @@
 from django.urls import path
 from . import views
 from .views import upload_and_parse_image,save_aadhaar_data,home
-from rest_framework.authtoken.views import obtain_auth_token
-from django.views.generic import TemplateView
 
 urlpatterns=[
     path('', views.home, name='home'),

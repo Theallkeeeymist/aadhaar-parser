@@ -1,13 +1,8 @@
-# Before accessing any Django  settings in utils.py
-# configure Django manually if file is outside views
 import os
 from ultralytics import YOLO
 import cv2
 import pytesseract
 import re
-import matplotlib.pyplot as plt
-from django.conf import settings
-# my_setting = settings.MY_SETTING  # This will be evaluated immediately
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 model_path = os.path.join(BASE_DIR, 'parser_app', 'aadhaar_detection_YOLOv8_model.pt')

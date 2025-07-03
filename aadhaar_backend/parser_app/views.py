@@ -2,17 +2,9 @@ from django.core.files.storage import default_storage
 from django.conf import settings
 from django.shortcuts import render
 from django.http import JsonResponse
-from rest_framework import status
-from rest_framework.decorators import api_view,permission_classes
-from rest_framework.permissions import IsAuthenticated
-# from rest_framework.authentication import TokenAuthentication
-from rest_framework.response import Response
 import os
 from .utils import parse_from_image
 from .models import AadhaarData
-from rest_framework.authtoken.models import Token
-from django.contrib.auth.models import User
-from rest_framework.authtoken.views import obtain_auth_token
 from django.views.decorators.csrf import csrf_exempt
 import json
 
