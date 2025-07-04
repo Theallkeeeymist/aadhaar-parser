@@ -39,6 +39,7 @@ def parse_view(request):
 
 # @api_view(['POST'])
 # @permission_classes([IsAuthenticated])
+@csrf_exempt
 def save_aadhaar_data(request):
     if request.method=="POST":
         try:
