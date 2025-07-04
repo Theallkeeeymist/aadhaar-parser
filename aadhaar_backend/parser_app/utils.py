@@ -4,14 +4,17 @@ import cv2
 import pytesseract
 import re
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-model_path = os.path.join(BASE_DIR, 'parser_app', 'aadhaar_detection_YOLOv8_model.pt')
-    # os.path.join(settings.BASE_DIR, "best.pt"))
-# print(f"📍 Looking for model at: {model_path}")
-# assert os.path.exists(model_path), f"❌ best.pt not found at: {model_path}"
-model = YOLO(model_path)
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# model_path = os.path.join(BASE_DIR, 'parser_app', 'aadhaar_detection_YOLOv8_model.pt')
+#     # os.path.join(settings.BASE_DIR, "best.pt"))
+# # print(f"📍 Looking for model at: {model_path}")
+# # assert os.path.exists(model_path), f"❌ best.pt not found at: {model_path}"
+# model = YOLO(model_path)
 
 def parse_from_image(image_path):
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    model_path = os.path.join(BASE_DIR, 'parser_app', 'aadhaar_detection_YOLOv8_model.pt')
+    model = YOLO(model_path)
     image = cv2.imread(image_path)
     resized_image = cv2.resize(image, (640, 640))
     return extract_fields(resized_image)
