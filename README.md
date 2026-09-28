@@ -1,9 +1,6 @@
 # Aadhaar Parser
 
 A web application that takes an image of an Aadhaar card, detects text regions with a custom-trained YOLOv8 model, reads each region with Tesseract OCR, lets the user review and edit the extracted values in a form, and saves the result to a database.
-
-> **Scope of this document:** every statement below was verified against the repository's source code, configuration, committed training artifacts (plots, CSVs) or the metadata embedded in the committed model weights. Items that could not be verified from the repository are listed under [Not verifiable from this repository](#not-verifiable-from-this-repository).
-
 ---
 
 ## Pipeline
